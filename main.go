@@ -1,11 +1,19 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"log"
 	"net/url"
+	"os"
 
 	"github.com/gocolly/colly"
 )
+
+type UrlJSON struct {
+	URL  string `json:"url"`
+	Text string `json:"text"`
+}
 
 // validate that all URLs provided are on the allowed domain
 func isValidURL(urlStr string, allowedDomains []string) bool {
@@ -62,9 +70,23 @@ func main() {
 		colly.AllowedDomains(allowedDomains...),
 	)
 
+	file, err := os.Create("output.jl")
+	if err != nil {
+		log.Fatal("Could not create output file", err)
+	}
+	defer file.Close()
+
 	c.OnHTML("a[href]", func(e *colly.HTMLElement) {
-		fmt.Println(e.Text)
-		// e.Request.Visit(e.Attr("href"))
+		data := UrlJSON{
+			URL:  e.Request.URL.String(),
+			Text: e.Text,
+		}
+		jsonData, err := json.Marshal(data)
+		if err != nil {
+			log.Printf("JSON encoding failed: %v", err)
+			return
+		}
+		fmt.Fprintln(file, string(jsonData))
 	})
 
 	c.OnRequest(func(r *colly.Request) {
