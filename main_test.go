@@ -5,7 +5,7 @@ import (
 )
 
 func TestIsValidURL(t *testing.T) {
-	allowedDomains := []string{"en.wikipedia.org"}
+	allowedDomains := []string{"en.wikipedia.org", "en.wikipedia.org/wiki"}
 
 	tests := []struct {
 		url   string

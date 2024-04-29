@@ -14,11 +14,17 @@ func isValidURL(urlStr string, allowedDomains []string) bool {
 		return false
 	}
 
+	if url.Scheme != "https" {
+		fmt.Printf("Wrong protocol: %s (must be https)", url.Scheme)
+		return false
+	}
+
 	if url.Scheme == "" || url.Host == "" {
 		return false
 	}
 
 	for _, domain := range allowedDomains {
+		fmt.Println(url.Host)
 		if url.Host == domain {
 			return true
 		}
@@ -42,7 +48,7 @@ func main() {
 		"https://en.wikipedia.org/wiki/Android_(robot)",
 	}
 
-	allowedDomains := []string{"en.wikipedia.org", "en.wikipedia.org/wiki"}
+	allowedDomains := []string{"en.wikipedia.org"}
 
 	for _, url := range urls {
 		if isValidURL(url, allowedDomains) {
