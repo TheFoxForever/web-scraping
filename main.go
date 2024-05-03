@@ -76,7 +76,7 @@ func main() {
 	}
 	defer file.Close()
 
-	c.OnHTML("a[href]", func(e *colly.HTMLElement) {
+	c.OnHTML("#content #bodyContent p", func(e *colly.HTMLElement) {
 		data := UrlJSON{
 			URL:  e.Request.URL.String(),
 			Text: e.Text,
